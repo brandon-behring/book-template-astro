@@ -1,6 +1,12 @@
 ---
-// Stage 0 visual demo — now with Tufte 2-column layout (commit 3).
+// Stage 0 visual demo — Tufte layout + 6 callout components (commit 8).
 import Base from '../layouts/Base.astro';
+import SkillBox from '../components/callouts/SkillBox.astro';
+import CaseStudy from '../components/callouts/CaseStudy.astro';
+import ConceptBox from '../components/callouts/ConceptBox.astro';
+import KeyIdea from '../components/callouts/KeyIdea.astro';
+import TryThis from '../components/callouts/TryThis.astro';
+import Recovery from '../components/callouts/Recovery.astro';
 ---
 
 <Base
@@ -119,13 +125,60 @@ greet("reader");  // → "Hello, reader"`}</code></pre>
       </tbody>
     </table>
 
+    <h2>Callouts · batch 1</h2>
+    <p>
+      Six visual-block callouts. Each uses the palette's semantic role
+      (green = tip, blue = info, plum = authority, rose = warning)
+      plus shared padding and left-bar treatment.
+    </p>
+
+    <SkillBox title="Warm-cache workflow">
+      Before a long session, reserve the first ~40% of context for the
+      stable briefing materials (CLAUDE.md, project rules). Run
+      <code>/context</code> to confirm the budget before loading any
+      chapter-specific files.
+    </SkillBox>
+
+    <CaseStudy date="2026-02">
+      When Gemini shipped the 1M-token context window, several teams
+      immediately filled it to near-capacity and watched retrieval
+      accuracy collapse. The lesson: a bigger window doesn't mean you
+      should use it.
+    </CaseStudy>
+
+    <ConceptBox term="Context rot">
+      The progressive degradation of agent output as the KV-cache
+      fills. Observable as drift, forgotten early-context references,
+      or incoherent code. Distinct from context overflow.
+    </ConceptBox>
+
+    <KeyIdea>
+      Context is a budget, not an infinity. Treat it like a finite
+      resource: account for it, spend it deliberately, reclaim it
+      when drift sets in.
+    </KeyIdea>
+
+    <TryThis title="Audit your context budget">
+      Open a chapter from your current work and run <code>/context</code>.
+      What percentage is already filled? What would you evict first?
+    </TryThis>
+
+    <Recovery
+      pattern="CLAUDE.md bloat"
+      symptom="Compaction triggers every 3 turns; new features land with context rot; old rules get forgotten mid-session."
+    >
+      Split CLAUDE.md into hub-and-spoke. Move project specifics to
+      <code>.claude/rules/*.md</code> with path-scoped loading. Keep
+      the hub under 200 lines.
+    </Recovery>
+
     <hr />
 
     <h2>Status</h2>
     <p>
-      Commit 3 of 19 in Stage 0. Next: dark mode (commit 4), then the
-      data model (commits 5–7), then the 9 callout components
-      (commits 8–10).
+      Commit 8 of 19 in Stage 0. Next: comparative callouts (Convergence,
+      Divergence) in commit 9, then Citation + Sidenote components in
+      commit 10.
     </p>
   </article>
 </Base>
