@@ -133,6 +133,10 @@
     background: #f6f4ee !important;
     border: 0.5pt solid #ccc;
     font-size: 8.5pt;
+    /* Long lines wrap rather than overflow the page edge. */
+    white-space: pre-wrap !important;
+    word-wrap: break-word;
+    overflow-x: visible !important;
   }
   code {
     background: transparent;
@@ -142,5 +146,58 @@
   .astro-code span {
     color: black !important;
     background: transparent !important;
+  }
+
+  /* ===== Polish pass (commit 17) =====
+   * Widows/orphans, keep-with-next rules, and a few edge-cases that
+   * only surface in real paginated output. */
+
+  /* Keep at least 3 lines together at page boundaries so paragraphs
+   * don't leave a stranded first/last line. */
+  p, li, blockquote {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Callout titles should stay with their body; don't let a pagebreak
+   * split the title from its explanation. */
+  .callout-title {
+    break-after: avoid;
+  }
+
+  /* Chapter header is introductory material; the page break should
+   * land either before it or after the header's content area — never
+   * mid-header, and never orphaning the h1 from the first paragraph. */
+  .chapter-header {
+    break-after: avoid;
+  }
+  .chapter-header h1 {
+    break-before: auto;  /* overrides the general h1 break-before:page */
+  }
+
+  /* Headings followed by content: don't let a break leave a heading
+   * alone at the end of a page. */
+  h2, h3, h4 {
+    break-inside: avoid;
+  }
+  h2 + p, h3 + p, h4 + p {
+    break-before: avoid;
+  }
+
+  /* Lists: keep small lists together. */
+  ul, ol {
+    break-inside: avoid-page;
+  }
+
+  /* Tables: try not to split short tables across pages. */
+  table {
+    break-inside: avoid-page;
+  }
+
+  /* Hide the caret on <details> TOC — it's already hidden by chrome
+   * display:none above, but belt-and-suspenders for printers that
+   * ignore the rule. */
+  details > summary {
+    list-style: none;
   }
 }
