@@ -73,3 +73,44 @@
 .callout-recovery .recovery-symptom strong {
   color: var(--color-text);
 }
+
+/* ===== Comparative callouts (Convergence / Divergence) =====
+ * Same gold palette (insight), different border style to signal
+ * "stable signal" (solid) vs "open design space" (dashed). Both surface
+ * in the Evolution cornerstone of every chapter, per the Koller-Friedman
+ * decomposition. */
+.callout-convergence {
+  border-left: var(--border-bar) solid var(--callout-insight);
+  background: var(--warm-gold-tint);
+}
+.callout-divergence {
+  border-left: var(--border-bar) dashed var(--callout-insight);
+  background: var(--warm-gold-tint);
+}
+
+/* Tool badges rendered inline in the Convergence title */
+.callout-convergence .tool-badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-left: var(--space-2);
+}
+.tool-badge {
+  display: inline-block;
+  padding: 0.05em 0.45em;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  font-family: var(--font-code);
+  letter-spacing: 0;
+}
+
+/* Divergence axis label */
+.callout-divergence .divergence-axis {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

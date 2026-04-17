@@ -7,6 +7,8 @@ import ConceptBox from '../components/callouts/ConceptBox.astro';
 import KeyIdea from '../components/callouts/KeyIdea.astro';
 import TryThis from '../components/callouts/TryThis.astro';
 import Recovery from '../components/callouts/Recovery.astro';
+import Convergence from '../components/callouts/Convergence.astro';
+import Divergence from '../components/callouts/Divergence.astro';
 ---
 
 <Base
@@ -172,13 +174,33 @@ greet("reader");  // → "Hello, reader"`}</code></pre>
       the hub under 200 lines.
     </Recovery>
 
+    <h2>Callouts · batch 2 (comparative)</h2>
+    <p>
+      Two callouts specifically for the Evolution cornerstone of each
+      chapter: Convergence (tools agree — stable principle) and
+      Divergence (tools differ — open design space). Both use the
+      gold palette; a dashed left-bar on Divergence signals instability.
+    </p>
+
+    <Convergence tools={['claude-code', 'gemini-cli', 'codex-cli']}>
+      All three tools now treat context as a budgeted, decaying
+      resource, and each ships an explicit compaction command. You can
+      safely write practices that assume this.
+    </Convergence>
+
+    <Divergence axis="context window size">
+      Claude: 200K · Gemini: 1M · Codex: 128K. The tradeoff between
+      retrieval accuracy (smaller works better) and ceiling (larger
+      fits more) is not yet settled — practice still varies.
+    </Divergence>
+
     <hr />
 
     <h2>Status</h2>
     <p>
-      Commit 8 of 19 in Stage 0. Next: comparative callouts (Convergence,
-      Divergence) in commit 9, then Citation + Sidenote components in
-      commit 10.
+      Commit 9 of 19 in Stage 0. Next: Citation + Sidenote components
+      in commit 10 (closes Phase C). Then chapter rendering pipeline
+      in commit 11 (opens Phase D).
     </p>
   </article>
 </Base>
