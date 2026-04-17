@@ -11,7 +11,9 @@
     "build:astro": "astro build",
     "index": "pagefind --site dist",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "pdf:render": "mkdir -p dist-pdf && pagedjs-cli http://localhost:4321/print/ -o dist-pdf/book.pdf",
+    "pdf": "start-server-and-test preview http://localhost:4321/ pdf:render"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
@@ -21,5 +23,9 @@
     "astro": "^6.1.7",
     "pagefind": "^1.5.2",
     "preact": "^10.29.1"
+  },
+  "devDependencies": {
+    "pagedjs-cli": "0.4.3",
+    "start-server-and-test": "3.0.2"
   }
 }
