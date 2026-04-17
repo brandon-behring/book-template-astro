@@ -31,6 +31,35 @@ page heading (*h1*) was rendered from the MDX frontmatter `title` field.
 The TOC auto-hides when the chapter has fewer than three `h2`/`h3`
 headings. This chapter has three, so it renders. Open it to jump around.
 
+## Testing Shiki syntax highlighting
+
+Commit 12 configures Shiki in `css-variables` mode and maps the
+highlighter tokens to the Warm Tol palette. This TypeScript block
+should render with colored keyword, string, function, and parameter
+tokens:
+
+```typescript
+// Measure the warm-cache footprint of a CLAUDE.md pass.
+export function budgetFor(path: string, maxTokens = 40_000): number {
+  const text = Deno.readTextFileSync(path);
+  const tokens = estimateTokens(text);
+  if (tokens > maxTokens) {
+    throw new Error(`${path} exceeds cache budget: ${tokens}/${maxTokens}`);
+  }
+  return tokens;
+}
+```
+
+And a YAML block for good measure:
+
+```yaml
+# sources/manifest.yaml sample entry
+- id: gwern-sidenote
+  url: https://gwern.net/sidenote
+  tier: T3-practitioner
+  captured_at: 2026-04-17T13:00:00Z
+```
+
 ## Next
 
 Commit 14 replaces this file with a full demo chapter exercising all

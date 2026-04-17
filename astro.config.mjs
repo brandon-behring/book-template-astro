@@ -5,5 +5,15 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [mdx()]
+  integrations: [mdx()],
+  markdown: {
+    shikiConfig: {
+      // css-variables mode: Shiki emits CSS custom properties
+      // (--astro-code-*) which are mapped to the Warm Tol palette in
+      // src/styles/tokens.css. Lets the same code block use different
+      // colors in light vs dark mode without rebuilding the site.
+      theme: 'css-variables',
+      wrap: false,
+    },
+  },
 });

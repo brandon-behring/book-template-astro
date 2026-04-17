@@ -84,6 +84,22 @@
   --radius-sm:  2px;
   --radius-md:  4px;
   --border-bar: 3px;   /* left-bar on callouts and sidenote asides */
+
+  /* ===== Shiki syntax highlighting (css-variables theme) =====
+   * Shiki's css-variables mode emits <span style="color:var(--astro-code-token-...)">
+   * for each token. Mapping to Warm Tol hues keeps code blocks in the
+   * same visual language as prose callouts. Dark mode overrides below. */
+  --astro-code-foreground:              var(--color-text);
+  --astro-code-background:              var(--color-code-bg);
+  --astro-code-token-constant:          var(--warm-rose);
+  --astro-code-token-string:            var(--warm-green);
+  --astro-code-token-string-expression: var(--warm-green);
+  --astro-code-token-comment:           var(--color-text-muted);
+  --astro-code-token-keyword:           var(--warm-plum);
+  --astro-code-token-parameter:         var(--warm-blue);
+  --astro-code-token-function:          var(--warm-gold);
+  --astro-code-token-punctuation:       var(--color-text-muted);
+  --astro-code-token-link:              var(--color-link);
 }
 
 /* ===== Dark mode ==========================================================
@@ -107,6 +123,14 @@
     /* Brighten headings + links for contrast against dark bg */
     --color-heading: color-mix(in srgb, var(--warm-blue) 55%, white);
     --color-link:    color-mix(in srgb, var(--warm-blue) 55%, white);
+
+    /* Shiki token brightenings for contrast on dark code-block bg */
+    --astro-code-token-constant:          color-mix(in srgb, var(--warm-rose)  60%, white);
+    --astro-code-token-string:            color-mix(in srgb, var(--warm-green) 60%, white);
+    --astro-code-token-string-expression: color-mix(in srgb, var(--warm-green) 60%, white);
+    --astro-code-token-keyword:           color-mix(in srgb, var(--warm-plum)  55%, white);
+    --astro-code-token-parameter:         color-mix(in srgb, var(--warm-blue)  55%, white);
+    --astro-code-token-function:          color-mix(in srgb, var(--warm-gold)  65%, white);
   }
 }
 
@@ -118,4 +142,11 @@
 
   --color-heading: color-mix(in srgb, var(--warm-blue) 55%, white);
   --color-link:    color-mix(in srgb, var(--warm-blue) 55%, white);
+
+  --astro-code-token-constant:          color-mix(in srgb, var(--warm-rose)  60%, white);
+  --astro-code-token-string:            color-mix(in srgb, var(--warm-green) 60%, white);
+  --astro-code-token-string-expression: color-mix(in srgb, var(--warm-green) 60%, white);
+  --astro-code-token-keyword:           color-mix(in srgb, var(--warm-plum)  55%, white);
+  --astro-code-token-parameter:         color-mix(in srgb, var(--warm-blue)  55%, white);
+  --astro-code-token-function:          color-mix(in srgb, var(--warm-gold)  65%, white);
 }
