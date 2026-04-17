@@ -25,10 +25,28 @@ See `/home/brandon_behring/.claude/plans/i-believe-this-project-generic-sphinx.m
 ## Commands
 
 ```sh
-npm run dev        # localhost:4321
-npm run build      # static HTML → dist/
-npm run preview    # preview production build
+npm run dev        # localhost:4321 (Astro dev server)
+npm run build      # Astro build + Pagefind indexing → dist/
+npm run preview    # preview the built site locally
+npm run pdf        # boot preview, run Paged.js against /print/,
+                   # output dist-pdf/book.pdf
 ```
+
+## Hosting (Cloudflare Pages)
+
+Deploy via the committed GitHub Action at `.github/workflows/deploy.yml`.
+One-time setup:
+
+1. Create a Cloudflare Pages project named `book-template-astro`.
+2. Create a Cloudflare API token with the **Edit Cloudflare Pages**
+   permission (Cloudflare Dashboard → My Profile → API Tokens).
+3. Add the following secrets to the GitHub repo (Settings → Secrets
+   and variables → Actions):
+   - `CLOUDFLARE_API_TOKEN` — the token from step 2
+   - `CLOUDFLARE_ACCOUNT_ID` — visible on any Cloudflare dashboard page
+4. Push to `main`. The workflow builds, indexes with Pagefind, and
+   uploads to Cloudflare Pages. Subsequent pushes to `v*` branches
+   deploy as versioned preview URLs.
 
 ## First book built on this scaffold
 
