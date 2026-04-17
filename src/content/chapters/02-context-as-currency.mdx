@@ -62,7 +62,7 @@ Across Claude Code, Gemini CLI, and Codex CLI, four primitives recur:
 1. **Observation** — show the current window fill so you can decide.
 2. **Compaction** — summarize the conversation in place, preserving decisions, discarding noise.
 3. **Clear / reset** — discard the conversation entirely and start fresh.
-4. **Persistence** — a top-level briefing file (CLAUDE.md / GEMINI.md / AGENTS.md) that survives compaction and is re-injected on every turn.
+4. **Persistence** — a top-level briefing doc (CLAUDE.md / GEMINI.md / AGENTS.md) that survives compaction and is re-injected on every turn.
 
 The table maps each tool's surface to these primitives:
 
@@ -72,7 +72,7 @@ The table maps each tool's surface to these primitives:
 | Compact | `/compact` (+ `<focus>` arg) | `/compress` | `/compact` |
 | Clear | `/clear` | `/chat clear` | new session |
 | Persist | `CLAUDE.md` | `GEMINI.md` | `AGENTS.md` |
-| Reload persistence | auto on compact | `/memory reload` | auto on launch |
+| Reload persistence | auto on compact | `/memory refresh` | auto on launch |
 
 <SkillBox title="The Claude Code toolkit">
   Claude ships a larger set of context primitives than either peer. The essentials are `/clear` (discard), `/compact` (summarize; pass a focus argument to direct what survives: `/compact Preserve: auth refactoring decisions`), `/context` (visualize), `/rewind` (checkpoint + roll back — available via double-Esc), and `/btw` (ask a side question without growing the window). Use the status line for continuous budget monitoring — it runs locally, consumes zero tokens, and surfaces the fill percentage in real time.
@@ -97,7 +97,7 @@ Some patterns apply regardless of which agent you use. They are consequences of 
 *After:* verify by asking a recall question about a decision from earlier in the session. If the model cannot answer, inject the missing context from your notes or briefing doc. Do not trust compaction silently.
 
 <CaseStudy date="2026-02">
-  When Gemini shipped the 1M-token window, teams immediately tried to use all of it. Community benchmarking showed quality degradation starting around 40% fill and ~1-in-4 retrievals failing at capacity. The effective high-quality range turned out to be ~200–500K tokens — well short of the 1M headline. The tool didn't deceive anyone; the mental model did. Bigger window ≠ bigger usable workspace.
+  When Gemini shipped the 1M-token window, teams immediately tried to use all of it. Community benchmarking — consistent with the published "lost in the middle" retrieval-accuracy literature — showed quality degrading well before the window filled, with the effective high-quality range running substantially shorter than the 1M headline. The tool didn't deceive anyone; the mental model did. Bigger window ≠ bigger usable workspace.
 </CaseStudy>
 
 <Recovery
@@ -111,7 +111,7 @@ Some patterns apply regardless of which agent you use. They are consequences of 
 
 Compaction is a *supplement* to persistence, not a replacement. Anything you want to survive a session boundary must be on disk. Three artifacts carry most of the weight:
 
-**The briefing document** (`CLAUDE.md` / `GEMINI.md` / `AGENTS.md`) holds project rules, architecture, conventions. It is re-injected on every turn, so every token in it has leverage. Anthropic recommends individual files under 200 lines, combined under ~500 lines; the same bound applies across the three tools by analogy — the file is a context tax you pay on every single prompt, so every line must earn its place.
+**The briefing doc** (`CLAUDE.md` / `GEMINI.md` / `AGENTS.md`) holds project rules, architecture, conventions. It is re-injected on every turn, so every token in it has leverage. Anthropic recommends individual files under 200 lines, combined under ~500 lines; the same bound applies across the three tools by analogy — the file is a context tax you pay on every single prompt, so every line must earn its place.
 
 **`CURRENT_WORK.md`** holds transient state: what you are working on right now, what changed, what's next. Written at the start and end of every session. A two-minute investment that saves ten minutes of re-discovery on return.
 
@@ -126,7 +126,7 @@ Compaction is a *supplement* to persistence, not a replacement. Anything you wan
 Context management is the most convergent area of agentic-coding practice — and simultaneously the area with the starkest active divergence. Tracking where those lines fall is most of what this section does.
 
 <Convergence tools={['claude-code', 'gemini-cli', 'codex-cli']}>
-  All three CLI agents treat context as a budgeted, decaying resource. Each ships an explicit compaction command that summarizes the conversation in place; each supports a top-level briefing document re-injected on every turn. Practices written today can safely assume these primitives exist.
+  All three CLI agents treat context as a budgeted, decaying resource. Each ships an explicit compaction command that summarizes the conversation in place; each supports a top-level briefing doc re-injected on every turn. Practices written today can safely assume these primitives exist.
 </Convergence>
 
 **Convergence: the briefing-document pattern.** Claude Code established `CLAUDE.md` as a project-root convention; Gemini CLI followed with `GEMINI.md`, and Codex CLI adopted `AGENTS.md`. All three work the same way: markdown in the project root, re-injected on every turn, hierarchical loading from global → project → sub-directory. This is no longer a contested design choice — it is the standard shape.
@@ -134,7 +134,7 @@ Context management is the most convergent area of agentic-coding practice — an
 **Convergence: compaction as a primitive.** Claude's `/compact`, Gemini's `/compress`, and Codex's `/compact` all solve the same problem with broadly the same technique (summarize the history, replace it with the summary, keep the briefing doc intact). Auto-compaction thresholds vary but the mechanism converges.
 
 <Divergence axis="context window size">
-  Claude Code: 200K (1M on Opus 4.6+) · Gemini CLI: 1M native · Codex CLI: 128K–200K depending on model. The tradeoff is not settled: larger windows admit more material but exhibit more attention-decay noise; smaller windows force better curation but require more frequent boundary management. Write practices that do not depend on a specific ceiling.
+  Claude Code: 200K native, 1M available on Opus-class models · Gemini CLI: 1M native · Codex CLI: varies by model (GPT-5-class models report ~272K). Specific numbers change per release; the *range* stays divergent. The tradeoff is not settled: larger windows admit more material but exhibit more attention-decay noise; smaller windows force better curation but require more frequent boundary management. Write practices that do not depend on a specific ceiling.
 </Divergence>
 
 **Divergence: compaction implementation strategy.** Three distinct approaches are in play. Claude performs *two-phase compaction*: it clears stale tool outputs first, only summarizing conversation if the first pass is insufficient. Gemini has shipped a *union-find clustering* alternative that resolves summaries asynchronously off the blocking path. Codex does a more direct *summarize-and-replace*. All three land at "shorter history, same briefing doc," but the fidelity curves differ. Quality comparisons across tools are sensitive to which strategy applies.
@@ -148,12 +148,8 @@ Context management is the most convergent area of agentic-coding practice — an
 **Emerging: subagent delegation.** Spawning a child agent with its own context to handle a bounded sub-task is a Claude Code feature today. It is a natural next step for agent design — the research context does not pollute the parent session. Gemini has announced direction on this; Codex has not. Pattern not yet convergent.
 
 <CaseStudy date="2026-03">
-  Gemini's union-find compaction landed as a feature flag in v0.8. Practitioners who tested it reported asynchronous summaries completing in ~200ms off the critical path, versus ~1.5s for the legacy inline approach. Pattern signal: as compaction becomes more sophisticated, practitioners lean on it more aggressively — which paradoxically makes briefing-doc discipline *more* important, not less, since the compacted history becomes less recoverable.
+  Gemini shipped an alternative compaction strategy that moves summary generation off the blocking path by clustering conversation chunks into a union-find forest and resolving summaries asynchronously, rather than compressing everything into one snapshot inline. Pattern signal: as compaction becomes more sophisticated, practitioners lean on it more aggressively — which paradoxically makes briefing-doc discipline *more* important, not less, since the compacted history becomes less recoverable when it needs re-inspection.
 </CaseStudy>
-
-### How this chapter will date
-
-The freshness stamp above says `Last verified 2026-04-17`. The **Representation** section is stable — context rot is a property of transformer attention, not any specific tool. The **Operation** section is moderately durable; command names can change but the primitives (observe / compact / clear / persist) are architectural. The **Evolution** section is the most volatile — this is a `feature-surface` concern in a chapter otherwise flagged `architectural-pattern`, and it will need re-verification quarterly.
 
 <KeyIdea>
   When tools converge on a primitive, write practices that depend on the primitive, not the command name. When tools diverge, name the axis of divergence clearly so a reader on any tool knows what question to ask. The Evolution cornerstone is where the book's shelf life is mostly set.

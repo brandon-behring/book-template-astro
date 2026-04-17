@@ -34,7 +34,7 @@ The edit-test-commit loop is the quality-preservation layer around the session l
 
 Not all verification is the same. A robust project layers defenses so that no single failure mode goes undetected:
 
-1. **Type safety** — static checking at compile/lint time (mypy, TypeScript, Rust's borrow checker, Go vet). The cheapest layer.
+1. **Type safety** — static checking at compile time (mypy, TypeScript, Go's type checker, Rust's type system and borrow checker). The cheapest layer.
 2. **Input validation** — preconditions at function entry. Fail fast with explicit errors (the fail-fast principle from [Ch 1](/01-agent-mental-model/)).
 3. **Unit tests** — each function in isolation; happy path + error cases + edge cases.
 4. **Integration tests** — multi-function workflows with realistic data.
@@ -159,7 +159,7 @@ def test_feature_builder_invariants(values):
 
 ## Evolution
 
-Verification-first is the single most convergent practice in agentic coding. The "give the agent a way to verify its own work" slogan is now universal across the three CLIs — but the *enforcement* surface (how you make verification non-skippable) differs substantially.
+Verification-first is the single most convergent practice in agentic coding. The *principle* is universal across tools; what differs substantially is the *enforcement surface* — how a tool lets you make verification non-skippable at the harness level rather than just recommended at the prompt level.
 
 <Convergence tools={['claude-code', 'gemini-cli', 'codex-cli']}>
   All three tools name verification as their single highest-leverage practice. All three support the test-first workflow (interface → tests → implementation). All three let you declare verification criteria in the briefing doc that the agent re-reads every turn. The 2024–2025 debate about whether agents can write tests is settled: they can, given specifications. The open question is how much enforcement the platform guarantees on top.
@@ -168,7 +168,7 @@ Verification-first is the single most convergent practice in agentic coding. The
 **Convergence: the six-layer model predates agentic coding.** The validation hierarchy (types → input → unit → integration → E2E → property) is pre-AI software engineering best practice. AI changes the enforcement economics — hooks make the layers automatic rather than aspirational — but the layers themselves are stable. Practices written to the six-layer shape will hold for the foreseeable future.
 
 <Divergence axis="hook system depth">
-  Claude Code ships the richest hook system: `PreToolUse`, `PostToolUse`, `PreCompact`, `PostCompact`, `Stop`, `SessionStart`, and more, each with matcher patterns for specific tool invocations. Gemini CLI has tool-level allowlists and basic pre/post hooks. Codex CLI uses command-approval configuration (`~/.codex/config.toml`) as its primary gate. For enforcing non-negotiable standards (run tests before commit, lint on write), Claude's hook depth is a real advantage; for teams who stay git-disciplined, Codex's simpler model is adequate.
+  Claude Code ships the richest hook system: `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Notification`, `Stop`, `SubagentStop`, `PreCompact`, `SessionStart`, `SessionEnd` — each with matcher patterns for specific tool invocations. Gemini CLI has tool-level allowlists and basic pre/post hooks. Codex CLI uses command-approval configuration (`~/.codex/config.toml`) as its primary gate. For enforcing non-negotiable standards (run tests before commit, lint on write), Claude's hook depth is a real advantage; for teams who stay git-disciplined, Codex's simpler model is adequate.
 </Divergence>
 
 <Divergence axis="domain-invariant test generation">
@@ -178,12 +178,8 @@ Verification-first is the single most convergent practice in agentic coding. The
 **Emerging: auto-repair loops.** When tests fail, some recent tool builds (Claude's `Stop` hook, Gemini's agent chaining) auto-loop the failure back into the agent for repair. The pattern is promising but unreliable — the failure diagnostic often doesn't surface the root cause, and the agent ends up repeatedly trying cosmetic fixes. Practice for 2026: if the auto-repair loop runs more than twice on the same failure, it's telling you something structural is wrong — intervene.
 
 <CaseStudy date="2026-01">
-  A production ML team tracked every agent-generated PR for six weeks with and without domain-invariant tests in the briefing doc. Results: PRs where the briefing doc specified domain invariants (leakage checks, unit consistency, completeness assertions) had a 7% post-merge revert rate. PRs without domain invariants had a 34% revert rate — and every reverted failure was a domain-correctness bug that all unit tests passed for. Pattern signal: domain invariants are not a best-practice, they are the 6-layer model's necessary completion for any codebase where "correct" requires judgment. Which is most codebases.
+  A production ML team tracked every agent-generated PR over six weeks, comparing periods with and without domain-invariant tests in the briefing doc. PRs generated when the briefing doc specified domain invariants (leakage checks, unit consistency, completeness assertions) had a small, single-digit revert rate. PRs generated without domain invariants reverted at several times that rate — and essentially every reverted failure was a domain-correctness bug that all unit tests had passed for. Pattern signal: domain invariants are not a best-practice add-on, they are the 6-layer model's necessary completion for any codebase where "correct" requires judgment. Which is most codebases.
 </CaseStudy>
-
-### How this chapter will date
-
-The **Representation** section — the six-layer model, the domain-correctness argument, phase-appropriate rigor — is stable. These were best practice before agents and will be after. The **Operation** section's command surface (hook event names, exact config file paths) is more volatile; expect annual refresh. The **Evolution** section, especially auto-repair loops and ambient verification, is active 2026 territory — treat claims here as 6-month claims, not 3-year claims.
 
 ## Quick reference
 

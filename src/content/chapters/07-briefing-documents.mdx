@@ -6,7 +6,7 @@ volatility: architectural-pattern
 tools_compared: [claude-code, gemini-cli, codex-cli]
 last_verified: 2026-04-17
 sources: []
-description: "CLAUDE.md / GEMINI.md / AGENTS.md — the industry has converged on a top-level briefing file the agent re-reads on every turn. This chapter is about what goes in it, what doesn't, and how to structure it so every token has leverage."
+description: "CLAUDE.md / GEMINI.md / AGENTS.md — the industry has converged on a project-root briefing doc the agent re-reads on every turn. This chapter is about what goes in it, what doesn't, and how to structure it so every token has leverage."
 draft: false
 ---
 
@@ -20,11 +20,11 @@ import Convergence from '../../components/callouts/Convergence.astro';
 import Divergence from '../../components/callouts/Divergence.astro';
 import Sidenote from '../../components/Sidenote.astro';
 
-*A stateless agent needs a frame. It has no memory of your project, no training on your conventions, no sense of what the current phase is or why this repo is shaped the way it is. The briefing document is how you give it one — on every single turn, at the top of context, where attention is strongest. This chapter is about what goes in that document, what shouldn't, and how to structure it so every line earns its place.*
+*A stateless agent needs a frame. It has no memory of your project, no training on your conventions, no sense of what the current phase is or why this repo is shaped the way it is. The briefing doc is how you give it one — on every single turn, at the top of context, where attention is strongest. This chapter is about what goes in it, what shouldn't, and how to structure it so every line earns its place.*
 
 ## Representation
 
-The briefing document is the single highest-leverage artifact in your project. Not because it's magic — because of where it sits in the conversation. Every modern CLI-agent re-reads the briefing doc at the start of every turn and injects it into context *before* the current prompt. This means every token in the file is paid-for on every single interaction of every session, forever. Waste is not free; density is compounding.
+The briefing doc is the single highest-leverage artifact in your project. Not because it's magic — because of where it sits in the conversation. Every modern CLI-agent re-reads the briefing doc at the start of every turn and injects it into context *before* the current prompt. This means every token in the file is paid-for on every single interaction of every session, forever. Waste is not free; density is compounding.
 
 <ConceptBox term="Briefing document">
   A project-root markdown file (CLAUDE.md, GEMINI.md, or AGENTS.md depending on the tool) that encodes the project's architecture, conventions, constraints, and verification criteria in a form an agent can consume as a stable frame. Re-read on every turn; survives compaction; defines the interpretive lens through which every prompt is interpreted.
@@ -56,7 +56,7 @@ The briefing doc is not a kitchen sink. These go elsewhere:
 
 ### Size discipline
 
-Anthropic's published guidance on Claude Code suggests individual briefing docs stay under ~200 lines, with combined total across all briefing files (global + project + enterprise + user) under ~500 lines. Those numbers are Claude-specific but the principle generalizes: **every briefing doc has a budget**, because it's a fixed tax on every turn. Over-budget briefing docs trigger the `Context overload` anti-pattern from [Ch 11](/11-antipatterns-recovery/) — rules get diluted across too much text and the agent starts picking and choosing which to follow.
+Anthropic's published guidance on Claude Code suggests individual briefing docs stay under ~200 lines, with the combined total across all briefing-doc layers (global + project + enterprise + user) under ~500 lines. Those numbers are Claude-specific but the principle generalizes: **every briefing doc has a budget**, because it's a fixed tax on every turn. Over-budget briefing docs trigger the `Context overload` anti-pattern from [Ch 11](/11-antipatterns-recovery/) — rules get diluted across too much text and the agent starts picking and choosing which to follow.
 
 <KeyIdea>
   If your briefing doc is growing past 200 lines, the question is not "how do I compress this?" but "which of these lines earns its tax every turn?" Anything that only matters for one submodule belongs in a path-scoped rule file. Anything that only matters for one decision belongs in an ADR. What survives in the hub is the content every agent turn of every session benefits from.
@@ -79,7 +79,7 @@ The three CLIs share the briefing-doc pattern and differ in loading mechanics.
 | Hierarchical nesting | 5-layer stack (global → project → local → enterprise → user) | nested `GEMINI.md` per directory | flat (global + project) |
 | Path-scoped rules | `.claude/rules/*.md` with `paths:` frontmatter | directory-nested GEMINI.md files | no first-class mechanism |
 | Imports / includes | `@path/to/shared.md` | `@path/to/file.md` | inline only |
-| Reload command | auto on compact | `/memory reload` | restart |
+| Reload command | auto on compact | `/memory refresh` | restart |
 | Line budget | ~200/file, ~500 total (Anthropic guidance) | no official guidance; same heuristic applies | no official guidance; same heuristic applies |
 
 <SkillBox title="The four core sections">
@@ -167,10 +167,6 @@ The briefing-doc pattern is the most complete convergence in the agentic-coding 
 <CaseStudy date="2026-01">
   A team migrated from Claude Code to Gemini CLI for a project requiring the 1M-token window. Their briefing-doc hierarchy ported with a single change: they renamed `CLAUDE.md` to `GEMINI.md` and moved `.claude/rules/backend.md` content into `backend/GEMINI.md`. The rules themselves — every line of architecture, convention, constraint, verification — needed no edits. The pattern isn't the tool; the tool just instantiates the pattern. Lesson: writing briefing docs that bet on the shape, not the filename, pays off at the tool-transition moment.
 </CaseStudy>
-
-### How this chapter will date
-
-The **Representation** section is stable — the briefing-doc pattern has converged and is not going anywhere. The **Operation** section's tool-specific table has moderate drift risk; file paths and import mechanisms are the most volatile rows. The **Evolution** section's emerging patterns (linting, team-shared conventions) are active 2026 territory and will be worth re-verifying in 6–12 months.
 
 ## Quick reference
 

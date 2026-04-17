@@ -36,7 +36,7 @@ Three system properties are universal across the category:
 
 **Tool use.** The agent does not type code into a file. It calls tools: `Read`, `Edit`, `Write`, `Bash`, `Glob`, `Grep`, and a varying set of specialized helpers. Each tool call costs context (the request + the result) and produces observable effects. Understanding this matters because every operation has a token price, and the agent's strategy is shaped by that price.
 
-**Configuration layers.** The agent's behavior is not a single rule set — it is a stack. A briefing document at the project root (`CLAUDE.md` / `GEMINI.md` / `AGENTS.md`), optional scoped rules, tool-level permissions, and in some tools an output-style layer. These layers are not suggestions — they are the operating system through which the agent interprets your project.
+**Configuration layers.** The agent's behavior is not a single rule set — it is a stack. A briefing doc at the project root (`CLAUDE.md` / `GEMINI.md` / `AGENTS.md`), optional scoped rules, tool-level permissions, and in some tools an output-style layer. These layers are not suggestions — they are the operating system through which the agent interprets your project.
 
 <KeyIdea>
   A CLI-agent is not a chatbot and not an autocomplete. It is a stateful loop with a finite budget, a concrete tool surface, and a configurable interpretation layer. Developers who treat it as a chatbot prompt it vaguely and are disappointed; developers who treat it as a system prompt it with verification criteria and are not. The same tool produces dramatically different results depending on which mental model the user holds.
@@ -76,20 +76,20 @@ The three CLI-agents this book covers all run the agent loop. The surface area d
 
 | Primitive | Claude Code | Gemini CLI | Codex CLI |
 | --- | --- | --- | --- |
-| Project briefing file | `CLAUDE.md` | `GEMINI.md` | `AGENTS.md` |
+| Project briefing doc | `CLAUDE.md` | `GEMINI.md` | `AGENTS.md` |
 | File read | `Read` tool | `read_file` | native read |
 | File edit | `Edit` / `Write` | `edit_file` / `write_file` | native edit |
 | Shell execution | `Bash` tool | `run_shell_command` | native exec |
 | Search | `Grep` / `Glob` | `search_file_content` | native grep |
-| Plan-mode entry | Shift+Tab | `/plan` | `--dry-run` |
+| Plan-mode entry | Shift+Tab | `/plan` | approval modes (`--suggest`, `-a on-request`) |
 | Configuration scope | layered (global / project / local / enterprise / user) | global + project (GEMINI.md) | global + project (`~/.codex/config.toml`) |
 
 <SkillBox title="Build the mental model actively on day one">
   Open your agent and make it describe itself. Ask: "What tools do you have available right now, and when would you call each one?" The answer surfaces the actual tool surface (not the marketing description), reveals which operations are free vs. context-costly, and catches configuration surprises early. Do this before you do any real work — the five-minute investment prevents hours of "why did it just do *that*?" later.
 </SkillBox>
 
-<SkillBox title="Treat the briefing file as the most leveraged document you own">
-  Every CLI-agent re-reads its briefing file on every turn. Every token in that file has multiplicative leverage. Budget it aggressively: project architecture (30 lines), code conventions (30 lines), non-obvious constraints (20 lines), explicit failure-mode instructions (20 lines), hard bounds on what the agent must not do (20 lines). A 120-line briefing file is not skimpy — it is typical for a well-run project. Over 200 lines means you're paying rent on every prompt for context the agent didn't need. Refactor into path-scoped rules.
+<SkillBox title="Treat the briefing doc as the most leveraged document you own">
+  Every CLI-agent re-reads its briefing doc on every turn. Every token in that file has multiplicative leverage. Budget it aggressively: project architecture (30 lines), code conventions (30 lines), non-obvious constraints (20 lines), explicit failure-mode instructions (20 lines), hard bounds on what the agent must not do (20 lines). A 120-line briefing doc is not skimpy — it is typical for a well-run project. Over 200 lines means you're paying rent on every prompt for context the agent didn't need. Refactor into path-scoped rules.
 </SkillBox>
 
 <Recovery
@@ -114,7 +114,7 @@ The three CLI-agents this book covers all run the agent loop. The surface area d
 The agent-loop abstraction has converged across the CLI-agent category faster than almost any other pattern in agentic coding. What remains contested is the shape of the tool surface, the depth of configuration, and which workflow primitives graduate into first-class commands.
 
 <Convergence tools={['claude-code', 'gemini-cli', 'codex-cli']}>
-  All three CLI-agents implement the same underlying loop: prompt → reason → tool → observe → decide. All three expose a core set of tools (file read, file edit, shell, search). All three use a project-root briefing file, re-injected on every turn. The category has crystallized around this shape; practices written to the loop-shape will hold across tools.
+  All three CLI-agents implement the same underlying loop: prompt → reason → tool → observe → decide. All three expose a core set of tools (file read, file edit, shell, search). All three use a project-root briefing doc, re-injected on every turn. The category has crystallized around this shape; practices written to the loop-shape will hold across tools.
 </Convergence>
 
 **Convergence: engineering principles are pre-agentic.** The four principles above — never fail silently, simplicity, immutability, fail fast — are not changing. They were best practice before AI-generated code existed; they remain best practice after. What changed is the amplification factor. A silent-failure pattern in a 10,000-line codebase now propagates into every new file the agent writes. The principles themselves are stable.
@@ -127,7 +127,7 @@ The agent-loop abstraction has converged across the CLI-agent category faster th
   Claude Code ships a five-layer configuration stack (global CLAUDE.md → project CLAUDE.md → project-local → enterprise → user). Gemini CLI and Codex CLI use flatter schemes (global + project). For solo projects, the depth is unused overhead; for team + enterprise scenarios, Claude's stack maps cleanly to real organizational boundaries. The divergence reflects different target user profiles, not different philosophies.
 </Divergence>
 
-**Emerging: plan-mode as a primitive.** All three tools have shipped (or committed to) an explicit planning phase where the agent reads and proposes without writing. Claude's was first-class first; Gemini shipped theirs in v0.8 (March 2026); Codex added `--dry-run` around the same time. Expect this to become a full convergence within a year.
+**Emerging: plan-mode as a primitive.** All three tools have shipped (or committed to) an explicit planning phase where the agent reads and proposes without writing. Claude's was first-class first; Gemini shipped an explicit `/plan` command later. Codex approximates the same behavior through its approval-mode flow (`--suggest` / `-a on-request`): the agent proposes each action, waits for operator approval before executing. Not the same framing but functionally equivalent for review-before-edit workflows. Expect full first-class convergence within a year.
 
 **Emerging: delegation / subagents.** Spawning a child agent with its own context for a bounded sub-task exists in Claude Code today and is signalled-but-not-shipped in Gemini. Codex has not yet. The pattern is a natural fit once the agent-loop model is internalized, but the engineering to do it safely (context isolation, result summarization, permission propagation) is non-trivial. Expect partial convergence in 2026, full convergence in 2027.
 
