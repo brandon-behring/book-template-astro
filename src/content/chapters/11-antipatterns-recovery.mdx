@@ -146,7 +146,7 @@ The catalog. Eight common anti-patterns, each with a Recovery box you can apply 
 
 **Root cause:** the scope of the rewrite exceeds what can be held in context. The agent loses track of the original behavior and introduces regressions.
 
-**Prevention:** incremental refactoring — extract one function, write characterization tests, refactor, verify, commit. Each step independently shippable. Characterization-test mechanics are covered in [Ch 5 Edit-Test-Commit](/05-edit-test-commit/); project-wide refactoring workflow will be covered in the starting-and-refactoring chapter (forthcoming).
+**Prevention:** incremental refactoring — extract one function, write characterization tests, refactor, verify, commit. Each step independently shippable. Characterization-test mechanics are covered in [Ch 5 Edit-Test-Commit](/05-edit-test-commit/); the full four-step refactoring protocol (extract → test → harden → promote) is covered in [Ch 10 Starting and Refactoring Projects](/10-starting-and-refactoring/).
 
 <Recovery
   pattern="Big-bang refactoring"
