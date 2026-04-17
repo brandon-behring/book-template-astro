@@ -3,9 +3,11 @@ import { defineConfig } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
 
+import preact from '@astrojs/preact';
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [mdx()],
+  integrations: [mdx(), preact()],
   markdown: {
     shikiConfig: {
       // css-variables mode: Shiki emits CSS custom properties
