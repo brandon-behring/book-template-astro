@@ -6,17 +6,34 @@ volatility: stable-principle
 tools_compared: [cross-tool]
 last_verified: 2026-04-17
 sources: []
-description: Placeholder chapter exercising the frontmatter schema during Stage 0. Not rendered into the book.
-draft: true
+description: Placeholder chapter used to verify the dynamic-route rendering pipeline. Commit 14 replaces this with a full demo.
+draft: false
 ---
 
 # Scaffold test chapter
 
-This file's only purpose is to exercise `src/content.config.ts`. If the build
-succeeds, the chapter frontmatter schema is validating real files end-to-end.
+This file exists to exercise the chapter-rendering pipeline during Stage 0:
 
-When the Chapter layout arrives in commit 11, this file will be deleted and
-replaced with real content (Stage 1 ports Ch 5 "Context as Currency").
+1. `src/content.config.ts` validates the frontmatter (Zod schema).
+2. `src/pages/[...slug].astro` emits a static path for this entry.
+3. `src/layouts/Chapter.astro` renders the ChapterHeader, ChapterTOC, and
+   ChapterNav around the MDX body.
+4. The route `/00-scaffold-test/` serves the result.
 
-Until then, this chapter stays `draft: true` so it will be excluded from any
-navigation, search index, or public routing.
+## What you should see
+
+The chapter header above surfaces the frontmatter: part, chapter number,
+last-verified date, volatility badge, and the tools-compared row. The
+page heading (*h1*) was rendered from the MDX frontmatter `title` field.
+
+## Testing the TOC
+
+The TOC auto-hides when the chapter has fewer than three `h2`/`h3`
+headings. This chapter has three, so it renders. Open it to jump around.
+
+## Next
+
+Commit 14 replaces this file with a full demo chapter exercising all
+nine typed callouts plus sidenotes and citations through the live
+routing pipeline. For now, this placeholder just proves the pipeline
+compiles and renders.
