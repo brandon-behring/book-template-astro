@@ -1,157 +1,147 @@
 ---
 // Stage 0 visual demo — palette + typography tokens.
 // Layout grid arrives in commit 3.
-import '@fontsource-variable/roboto';
-import '@fontsource-variable/source-code-pro';
-import '../styles/tokens.css';
-import '../styles/typography.css';
+import Base from '../layouts/Base.astro';
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="generator" content={Astro.generator} />
-    <title>book-template-astro · Stage 0 design tokens</title>
-  </head>
-  <body>
-    <main class="demo">
-      <h1>book-template-astro</h1>
-      <p>
-        <strong>Stage 0 · commit 1 of 19.</strong> This page visualizes the
-        Warm Tol palette and typography tokens. No layout grid yet — that
-        arrives in commit 3. Sidenotes land in commits 3 &amp; 10.
-      </p>
+<Base
+  title="book-template-astro · Stage 0 design tokens"
+  description="Scaffold for long-form technical books with Tufte-inspired typography and typed pedagogical callouts."
+>
+  <main class="demo">
+    <h1>book-template-astro</h1>
+    <p>
+      <strong>Stage 0 · commit 2 of 19.</strong> This page visualizes the
+      Warm Tol palette and typography tokens. No layout grid yet — that
+      arrives in commit 3. Sidenotes land in commits 3 &amp; 10.
+    </p>
 
-      <h2>Warm Tol palette</h2>
-      <p>Five semantic hues inherited from the LaTeX book. Colorblind-safe (Tol Bright base).</p>
-      <div class="swatches">
-        <div class="swatch" style="background: var(--warm-blue)">
-          <strong>Blue</strong><br /><code>#3B6FA0</code><br /><small>structural · info</small>
-        </div>
-        <div class="swatch" style="background: var(--warm-rose)">
-          <strong>Rose</strong><br /><code>#C06858</code><br /><small>attention · warning</small>
-        </div>
-        <div class="swatch" style="background: var(--warm-green)">
-          <strong>Green</strong><br /><code>#4A7E3F</code><br /><small>positive · tip</small>
-        </div>
-        <div class="swatch" style="background: var(--warm-plum)">
-          <strong>Plum</strong><br /><code>#8A4E82</code><br /><small>authority · official</small>
-        </div>
-        <div class="swatch" style="background: var(--warm-gold)">
-          <strong>Gold</strong><br /><code>#C09840</code><br /><small>insight · convergence</small>
-        </div>
+    <h2>Warm Tol palette</h2>
+    <p>Five semantic hues inherited from the LaTeX book. Colorblind-safe (Tol Bright base).</p>
+    <div class="swatches">
+      <div class="swatch" style="background: var(--warm-blue)">
+        <strong>Blue</strong><br /><code>#3B6FA0</code><br /><small>structural · info</small>
       </div>
-
-      <h2>Callout tints</h2>
-      <p>Soft 6% blends with paper, used as callout backgrounds with a colored left-bar.</p>
-      <div class="callout-previews">
-        <div class="cp" style="background: var(--warm-blue-tint); border-left: 3px solid var(--warm-blue);">Info tint</div>
-        <div class="cp" style="background: var(--warm-rose-tint); border-left: 3px solid var(--warm-rose);">Warn tint</div>
-        <div class="cp" style="background: var(--warm-green-tint); border-left: 3px solid var(--warm-green);">Tip tint</div>
-        <div class="cp" style="background: var(--warm-plum-tint); border-left: 3px solid var(--warm-plum);">Official tint</div>
-        <div class="cp" style="background: var(--warm-gold-tint); border-left: 3px solid var(--warm-gold);">Insight tint</div>
+      <div class="swatch" style="background: var(--warm-rose)">
+        <strong>Rose</strong><br /><code>#C06858</code><br /><small>attention · warning</small>
       </div>
+      <div class="swatch" style="background: var(--warm-green)">
+        <strong>Green</strong><br /><code>#4A7E3F</code><br /><small>positive · tip</small>
+      </div>
+      <div class="swatch" style="background: var(--warm-plum)">
+        <strong>Plum</strong><br /><code>#8A4E82</code><br /><small>authority · official</small>
+      </div>
+      <div class="swatch" style="background: var(--warm-gold)">
+        <strong>Gold</strong><br /><code>#C09840</code><br /><small>insight · convergence</small>
+      </div>
+    </div>
 
-      <h2>Typography</h2>
-      <p>
-        Body text in Roboto Variable, self-hosted via <code>@fontsource-variable</code>.
-        Line height is <code>1.6</code> — targeting long-form reading. Paragraphs indent
-        by <code>1em</code> with zero vertical gap, except the first paragraph after
-        a heading (standard book typography).
-      </p>
-      <p>
-        This second paragraph indents at the start, visually marking it as continuation
-        rather than a fresh topic. Inline <code>monospace code</code> renders in
-        Source Code Pro Variable with subtle background and border.
-      </p>
+    <h2>Callout tints</h2>
+    <p>Soft 6% blends with paper, used as callout backgrounds with a colored left-bar.</p>
+    <div class="callout-previews">
+      <div class="cp" style="background: var(--warm-blue-tint); border-left: 3px solid var(--warm-blue);">Info tint</div>
+      <div class="cp" style="background: var(--warm-rose-tint); border-left: 3px solid var(--warm-rose);">Warn tint</div>
+      <div class="cp" style="background: var(--warm-green-tint); border-left: 3px solid var(--warm-green);">Tip tint</div>
+      <div class="cp" style="background: var(--warm-plum-tint); border-left: 3px solid var(--warm-plum);">Official tint</div>
+      <div class="cp" style="background: var(--warm-gold-tint); border-left: 3px solid var(--warm-gold);">Insight tint</div>
+    </div>
 
-      <h3>Heading hierarchy</h3>
-      <p>
-        All headings are in italic blue — distinctive and less bold-authoritarian than
-        the typical docs-site default. Reflects the LaTeX book's voice.
-      </p>
-      <h4>Fourth-level heading</h4>
-      <h5>Fifth-level heading</h5>
-      <h6>Sixth level (normal weight, different role)</h6>
+    <h2>Typography</h2>
+    <p>
+      Body text in Roboto Variable, self-hosted via <code>@fontsource-variable</code>.
+      Line height is <code>1.6</code> — targeting long-form reading. Paragraphs indent
+      by <code>1em</code> with zero vertical gap, except the first paragraph after
+      a heading (standard book typography).
+    </p>
+    <p>
+      This second paragraph indents at the start, visually marking it as continuation
+      rather than a fresh topic. Inline <code>monospace code</code> renders in
+      Source Code Pro Variable with subtle background and border.
+    </p>
 
-      <h3>Lists</h3>
-      <ul>
-        <li>First item</li>
-        <li>Second item with <em>emphasis</em> and <strong>strong</strong> inline</li>
-        <li>Third item referencing <a href="#">a link</a></li>
-      </ul>
+    <h3>Heading hierarchy</h3>
+    <p>
+      All headings are in italic blue — distinctive and less bold-authoritarian than
+      the typical docs-site default. Reflects the LaTeX book's voice.
+    </p>
+    <h4>Fourth-level heading</h4>
+    <h5>Fifth-level heading</h5>
+    <h6>Sixth level (normal weight, different role)</h6>
 
-      <h3>Code block</h3>
-      <pre><code>{`function greet(name: string): string {
+    <h3>Lists</h3>
+    <ul>
+      <li>First item</li>
+      <li>Second item with <em>emphasis</em> and <strong>strong</strong> inline</li>
+      <li>Third item referencing <a href="#">a link</a></li>
+    </ul>
+
+    <h3>Code block</h3>
+    <pre><code>{`function greet(name: string): string {
   return \`Hello, \${name}\`;
 }
 
 greet("reader");  // → "Hello, reader"`}</code></pre>
 
-      <h3>Blockquote</h3>
-      <blockquote>
-        Sidenotes should display by default — any user effort defeats the point.
-        — Gwern (on mobile footnote UX)
-      </blockquote>
+    <h3>Blockquote</h3>
+    <blockquote>
+      Sidenotes should display by default — any user effort defeats the point.
+      — Gwern (on mobile footnote UX)
+    </blockquote>
 
-      <h3>Table</h3>
-      <table>
-        <thead>
-          <tr><th>Tool</th><th>Context window</th><th>Briefing file</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Claude Code</td><td>200K</td><td><code>CLAUDE.md</code></td></tr>
-          <tr><td>Gemini CLI</td><td>1M</td><td><code>GEMINI.md</code></td></tr>
-          <tr><td>Codex CLI</td><td>128K</td><td><code>AGENTS.md</code></td></tr>
-        </tbody>
-      </table>
+    <h3>Table</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Context window</th><th>Briefing file</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Claude Code</td><td>200K</td><td><code>CLAUDE.md</code></td></tr>
+        <tr><td>Gemini CLI</td><td>1M</td><td><code>GEMINI.md</code></td></tr>
+        <tr><td>Codex CLI</td><td>128K</td><td><code>AGENTS.md</code></td></tr>
+      </tbody>
+    </table>
 
-      <hr />
+    <hr />
 
-      <h2>Status</h2>
-      <p>
-        Commit 1 of 19 in Stage 0. Next: base Layout component (commit 2), then
-        Tufte 2-column grid with mobile inline-flow asides (commit 3).
-      </p>
-    </main>
+    <h2>Status</h2>
+    <p>
+      Commit 2 of 19 in Stage 0. Next: Tufte 2-column grid with mobile
+      inline-flow asides (commit 3).
+    </p>
+  </main>
+</Base>
 
-    <style>
-      /* Demo-page-only styles. Real layout grid arrives in commit 3. */
-      .demo {
-        max-width: var(--measure-main);
-        margin: var(--space-8) auto;
-        padding: 0 var(--space-4);
-      }
-      .swatches {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-        gap: var(--space-2);
-        margin: var(--space-4) 0;
-      }
-      .swatch {
-        color: white;
-        padding: var(--space-4);
-        border-radius: var(--radius-md);
-      }
-      .swatch code {
-        background: rgba(0, 0, 0, 0.2);
-        color: white;
-        border: 0;
-      }
-      .callout-previews {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-        gap: var(--space-2);
-        margin: var(--space-4) 0;
-      }
-      .cp {
-        padding: var(--space-3) var(--space-4);
-        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-        font-size: var(--text-sm);
-      }
-    </style>
-  </body>
-</html>
+<style>
+  /* Demo-page-only styles. Real layout grid arrives in commit 3. */
+  .demo {
+    max-width: var(--measure-main);
+    margin: var(--space-8) auto;
+    padding: 0 var(--space-4);
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--space-2);
+    margin: var(--space-4) 0;
+  }
+  .swatch {
+    color: white;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+  }
+  .swatch code {
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    border: 0;
+  }
+  .callout-previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--space-2);
+    margin: var(--space-4) 0;
+  }
+  .cp {
+    padding: var(--space-3) var(--space-4);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: var(--text-sm);
+  }
+</style>

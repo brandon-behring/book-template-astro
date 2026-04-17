@@ -1,0 +1,52 @@
+---
+/**
+ * Base.astro — the outermost HTML shell.
+ *
+ * Every page in the book extends this. Loads:
+ *   - Variable fonts (Roboto, Source Code Pro) self-hosted via @fontsource-variable
+ *   - Design tokens and baseline typography
+ *   - Meta tags for viewport, color-scheme, generator
+ *
+ * Props:
+ *   title       — document title (required)
+ *   description — meta description (optional; used by search and social)
+ *   lang        — html lang attribute (default: en)
+ *
+ * Usage:
+ *   ---
+ *   import Base from '../layouts/Base.astro';
+ *   ---
+ *   <Base title="Chapter 1" description="...">
+ *     <main>...</main>
+ *   </Base>
+ */
+import '@fontsource-variable/roboto';
+import '@fontsource-variable/source-code-pro';
+import '../styles/tokens.css';
+import '../styles/typography.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: string;
+}
+
+const { title, description, lang = 'en' } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
