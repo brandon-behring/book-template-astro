@@ -4,11 +4,26 @@ Scaffold for long-form technical books with Tufte-inspired typography, typed ped
 
 This is the **template repository** — future books will be bootstrapped from this scaffold and customize content. The scaffold itself is maintained here as the canonical artifact.
 
-## Status
+## Status — Stage 0 complete
 
-Stage 0 bootstrap — Astro + MDX initialized. Tufte CSS, callout components, Pagefind, Paged.js, Cloudflare deploy, and Shiki theme not yet wired up.
+All 19 commits of Stage 0 have landed. Tagged as `v0.1-stage0-complete`.
 
-See `/home/brandon_behring/.claude/plans/i-believe-this-project-generic-sphinx.md` for the full scaffold plan and staged roadmap.
+- ✅ Astro 6 + MDX + Preact
+- ✅ Warm Tol palette as CSS custom properties (light + dark)
+- ✅ Tufte 2-column desktop layout; inline-flow asides on mobile (CSS-only)
+- ✅ 9 typed callout components (Skill / CaseStudy / Concept / KeyIdea / TryThis / Recovery / Convergence / Divergence / Citation)
+- ✅ 4 content collections with Zod schemas (chapters / sources / changelog / patterns)
+- ✅ Dynamic chapter routing + prev/next nav + collapsed TOC
+- ✅ Shiki syntax highlighting in CSS-variables mode
+- ✅ Pagefind static search
+- ✅ Preact island proof (version selector)
+- ✅ Paged.js PDF pipeline
+- ✅ Cloudflare Pages deploy workflow (pending account setup)
+
+Next: Stage 1 ports Ch 5 "Context as Currency" from the LaTeX book to
+validate the pedagogy on real content. See
+`~/.claude/plans/i-believe-this-project-generic-sphinx.md` for the full
+roadmap.
 
 ## Architecture (planned)
 
