@@ -22,3 +22,11 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Playwright source captures: metadata tracked in sources/manifest.yaml;
+# full HTML/screenshots/PDF stay local for drift detection only.
+sources/cache/*
+!sources/cache/.gitkeep
+
+# PDF build output
+dist-pdf/

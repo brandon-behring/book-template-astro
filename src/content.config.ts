@@ -25,7 +25,7 @@
  *                     accuracy).
  */
 import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { glob, file } from 'astro/loaders';
 
 const toolSlugs = [
   'claude-code',
@@ -40,6 +40,14 @@ const volatilityLevels = [
   'feature-surface',      // changes on minor versions; highest drift risk
 ] as const;
 
+const sourceTiers = [
+  'T1-official',      // vendor-official docs or release notes
+  'T2-release-notes', // release blog / changelog
+  'T3-practitioner',  // respected community writing
+  'T4-conjecture',    // blog / tweet / unverified
+] as const;
+
+// ===== chapters =====
 const chapters = defineCollection({
   loader: glob({
     pattern: '**/*.{md,mdx}',
@@ -59,8 +67,28 @@ const chapters = defineCollection({
   }),
 });
 
-export const collections = { chapters };
+// ===== sources =====
+// One entry per cited source. The file loader reads sources/manifest.yaml
+// and keys each entry by its `id` field. Accessed from components via
+// `await getEntry('sources', slug)`.
+const sources = defineCollection({
+  loader: file('sources/manifest.yaml'),
+  schema: z.object({
+    url: z.string().url(),
+    title: z.string().min(1),
+    author: z.string().optional(),
+    publish_date: z.date().optional(),
+    captured_at: z.date(),
+    content_hash: z.string().regex(/^sha256:[a-f0-9]+$/).optional(),
+    tier: z.enum(sourceTiers),
+    tool: z.enum(toolSlugs),
+    perma_cc: z.string().url().nullable().optional(),
+    local_cache: z.string().nullable().optional(),
+  }),
+});
+
+export const collections = { chapters, sources };
 
 // Re-export enum arrays so components and tests can import the same
 // canonical lists without redefining them.
-export { toolSlugs, volatilityLevels };
+export { toolSlugs, volatilityLevels, sourceTiers };
