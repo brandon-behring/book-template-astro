@@ -49,17 +49,34 @@
   position: relative;
 }
 
-/* Numbered reference marker inline in main text.
- * Rendered by the future <Sidenote> component (commit 10); exposed
- * here so commit 3 demos work. */
+/* ===== Auto-numbered sidenote markers (CSS counters) =====
+ * Counter resets per .prose so each chapter numbers from 1. The marker
+ * and its matching sidenote share the same counter value because only
+ * the marker increments it. */
+.prose {
+  counter-reset: sidenote;
+}
+
 .sidenote-marker {
+  counter-increment: sidenote;
   color: var(--color-link);
-  font-feature-settings: "sups";
-  vertical-align: super;
+  cursor: help;
   font-size: 0.75em;
+  vertical-align: super;
   line-height: 0;
   margin-left: 0.1em;
-  cursor: help;
+}
+.sidenote-marker::after {
+  content: counter(sidenote);
+}
+
+/* Sidenote itself prefixes with the counter so readers can match
+ * marker-in-main-text with note-in-margin. */
+.sidenote::before {
+  content: counter(sidenote) ". ";
+  font-weight: 500;
+  color: var(--color-link);
+  margin-right: 0.15em;
 }
 
 /* ===== Mobile breakpoint: inline-flow asides =====
