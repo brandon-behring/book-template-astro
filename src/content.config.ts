@@ -87,8 +87,62 @@ const sources = defineCollection({
   }),
 });
 
-export const collections = { chapters, sources };
+// ===== changelog (per-tool release timelines) =====
+// One entry per tool. The glob loader picks up changelog/tools/*.yaml;
+// the shared registry changelog/patterns.yaml sits one level up so it
+// isn't swept into this collection.
+const changeKinds = ['added', 'removed', 'changed', 'deprecated'] as const;
+
+const changelog = defineCollection({
+  loader: glob({
+    pattern: '*.yaml',
+    base: './changelog/tools',
+  }),
+  schema: z.object({
+    tool: z.enum(toolSlugs),
+    versions: z.array(z.object({
+      version: z.string().min(1),
+      date: z.date(),
+      changes: z.array(z.object({
+        pattern: z.string(),        // references patterns collection by id
+        kind: z.enum(changeKinds),
+        note: z.string().min(1),
+        source_key: z.string().optional(),  // references sources collection by id
+      })).default([]),
+    })).default([]),
+  }),
+});
+
+// ===== patterns (shared registry across tools) =====
+// Names the agentic-coding patterns that one or more tools may adopt.
+// Feeds the convergence/divergence dashboard in Stage 3.
+const patternCategories = [
+  'safety',
+  'scale',
+  'context',
+  'interaction',
+  'extension',
+  'other',
+] as const;
+
+const patterns = defineCollection({
+  loader: file('changelog/patterns.yaml'),
+  schema: z.object({
+    name: z.string().min(1),
+    description: z.string().optional(),
+    category: z.enum(patternCategories).optional(),
+    convergence_date: z.date().nullable().optional(),
+  }),
+});
+
+export const collections = { chapters, sources, changelog, patterns };
 
 // Re-export enum arrays so components and tests can import the same
 // canonical lists without redefining them.
-export { toolSlugs, volatilityLevels, sourceTiers };
+export {
+  toolSlugs,
+  volatilityLevels,
+  sourceTiers,
+  changeKinds,
+  patternCategories,
+};
