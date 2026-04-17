@@ -85,3 +85,37 @@
   --radius-md:  4px;
   --border-bar: 3px;   /* left-bar on callouts and sidenote asides */
 }
+
+/* ===== Dark mode ==========================================================
+ * Override only the raw neutral palette + a couple of accent brightenings
+ * for contrast. Because semantic roles (--color-bg, --color-text,
+ * --color-link, etc.) and tint calcs reference these via var(), they
+ * auto-update with no further work.
+ *
+ * Precedence: explicit [data-theme="light"] > explicit [data-theme="dark"]
+ * > prefers-color-scheme. A small inline script in Base.astro applies any
+ * user-saved preference from localStorage before first paint (no FOUC).
+ * ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:       #1A1816;  /* deep warm-neutral page background */
+    --code-bg:     #26231F;
+    --code-frame:  #3A3632;
+    --dark-text:   #E8E5DD;  /* cream body text */
+
+    /* Brighten headings + links for contrast against dark bg */
+    --color-heading: color-mix(in srgb, var(--warm-blue) 55%, white);
+    --color-link:    color-mix(in srgb, var(--warm-blue) 55%, white);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:       #1A1816;
+  --code-bg:     #26231F;
+  --code-frame:  #3A3632;
+  --dark-text:   #E8E5DD;
+
+  --color-heading: color-mix(in srgb, var(--warm-blue) 55%, white);
+  --color-link:    color-mix(in srgb, var(--warm-blue) 55%, white);
+}
