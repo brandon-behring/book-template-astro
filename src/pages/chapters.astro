@@ -326,4 +326,36 @@ function partLabel(part: number, appendix: boolean): string {
     margin: 0;
     min-height: 0;
   }
+
+  /* Print override: the filter UI doesn't exist in print (chrome is
+   * hidden), so all chapters must render regardless of any filter
+   * state left over in the viewer. */
+  @media print {
+    .chapter-card[data-hidden-by-filter='true'] {
+      opacity: 1;
+      max-height: none;
+      margin: unset;
+      padding: unset;
+      border-width: 1px;
+      pointer-events: auto;
+      overflow: visible;
+    }
+    .chapter-card[data-hidden-by-filter='true'] .chapter-card-link {
+      visibility: visible;
+    }
+    .part-group[data-hidden-by-filter='true'] {
+      display: block;
+    }
+    .chapters-filter-hint {
+      display: none;
+    }
+  }
+
+  /* Reduced-motion: skip the opacity/height transition for anyone who
+   * prefers less motion. The display change is instant either way. */
+  @media (prefers-reduced-motion: reduce) {
+    .chapter-card {
+      transition: border-color 120ms ease, background 120ms ease;
+    }
+  }
 </style>
