@@ -10,6 +10,7 @@
  * Driven entirely from the chapter's frontmatter (see content.config.ts).
  */
 import type { CollectionEntry } from 'astro:content';
+import { getFreshness, freshnessLabel } from '../lib/freshness';
 
 interface Props {
   data: CollectionEntry<'chapters'>['data'];
@@ -19,12 +20,28 @@ const { data } = Astro.props;
 function formatDate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
+
+const freshness = getFreshness(data.last_verified, data.volatility);
+const freshnessText =
+  freshness.status === 'fresh'
+    ? 'Fresh'
+    : freshness.status === 'verify-soon'
+      ? 'Verify soon'
+      : 'Stale';
 ---
 <header class="chapter-header">
   <div class="chapter-meta">
     <span>Part {data.part}</span>
     <span>Chapter {data.chapter}</span>
-    <span>Last verified {formatDate(data.last_verified)}</span>
+    <span>
+      Last verified {formatDate(data.last_verified)}
+      <span
+        class="freshness-badge"
+        data-status={freshness.status}
+        aria-label={freshnessLabel(freshness)}
+        title={freshnessLabel(freshness)}
+      >{freshnessText}</span>
+    </span>
     {data.updated && <span>Updated {formatDate(data.updated)}</span>}
   </div>
   <h1>{data.title}</h1>
