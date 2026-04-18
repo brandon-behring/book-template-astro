@@ -36,7 +36,11 @@ function year(d: Date | undefined): string | null {
     const entries = grouped[tier];
     const empty = entries.length === 0;
     return (
-      <section class="source-archive-tier" data-tier={tier}>
+      <section
+        class="source-archive-tier"
+        data-tier={tier}
+        id={`tier-${tier}`}
+      >
         <header class="source-archive-tier-header">
           <h3 class="source-archive-tier-label">
             <span class={`tier-badge tier-${tier}`}>{TIER_LABELS[tier]}</span>
@@ -52,7 +56,11 @@ function year(d: Date | undefined): string | null {
             No sources at this tier yet. Appendix D is intentionally sparse in the early book; this slot fills as chapters leave draft.
           </p>
         ) : (
-          <ol class="source-archive-list">
+          <ol
+            class="source-archive-list"
+            role="list"
+            aria-label={`${TIER_LABELS[tier]} sources`}
+          >
             {entries.map((entry) => {
               const d = entry.data;
               return (
