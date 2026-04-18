@@ -64,6 +64,41 @@
   border: 1px solid var(--warm-rose);
 }
 
+/* Freshness badge — inline with "Last verified" in chapter-meta.
+ * Three status bands map to the same warm palette as volatility:
+ *   fresh       → green  (last_verified is recent relative to volatility threshold)
+ *   verify-soon → gold   (75-100% of threshold elapsed)
+ *   stale       → rose   (past threshold; verify before trusting claims)
+ */
+.freshness-badge {
+  display: inline-block;
+  margin-left: 0.35em;
+  padding: 0.02em 0.45em;
+  border-radius: var(--radius-sm);
+  font-size: 0.85em;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  vertical-align: baseline;
+  cursor: help;
+}
+.freshness-badge[data-status='fresh'] {
+  background: var(--warm-green-tint);
+  color: var(--warm-green);
+  border: 1px solid var(--warm-green);
+}
+.freshness-badge[data-status='verify-soon'] {
+  background: var(--warm-gold-tint);
+  color: var(--warm-gold);
+  border: 1px solid var(--warm-gold);
+}
+.freshness-badge[data-status='stale'] {
+  background: var(--warm-rose-tint);
+  color: var(--warm-rose);
+  border: 1px solid var(--warm-rose);
+  font-weight: 600;
+}
+
 .chapter-badge-row {
   display: flex;
   flex-wrap: wrap;
