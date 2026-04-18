@@ -45,6 +45,8 @@ function partLabel(part: number, appendix: boolean): string {
       </p>
     </header>
 
+    <p class="chapters-filter-hint" id="filter-hint" aria-live="polite"></p>
+
     {Array.from(byPart.entries()).map(([part, list]) => {
       const appendix = part >= 6;
       return (
@@ -105,6 +107,90 @@ function partLabel(part: number, appendix: boolean): string {
     })}
   </article>
 </Base>
+
+{/* Inline non-island script: applies tool filter from localStorage on
+    load, then reacts to ToolFilter island's "book:tool-filter:change"
+    CustomEvent. Handled as plain DOM so /chapters/ doesn't need its
+    own hydration island. */}
+<script is:inline>
+  (function () {
+    var STORAGE_KEY = 'book:tool-filter';
+    var EVENT_NAME = 'book:tool-filter:change';
+
+    function readSelected() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        var parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function applyFilter(selected) {
+      var cards = document.querySelectorAll('.chapter-card[data-tools]');
+      var shownCount = 0;
+      var totalCount = cards.length;
+      var active = Array.isArray(selected) && selected.length > 0;
+
+      cards.forEach(function (card) {
+        var attr = card.getAttribute('data-tools') || '';
+        var tools = attr.split(/\s+/).filter(Boolean);
+        var isCrossTool = tools.indexOf('cross-tool') !== -1;
+        var overlaps = false;
+        for (var i = 0; i < tools.length; i++) {
+          if (selected.indexOf(tools[i]) !== -1) {
+            overlaps = true;
+            break;
+          }
+        }
+
+        var hidden = active && !overlaps && !isCrossTool;
+        if (hidden) {
+          card.setAttribute('data-hidden-by-filter', 'true');
+        } else {
+          card.removeAttribute('data-hidden-by-filter');
+          shownCount++;
+        }
+      });
+
+      // Hide entire part sections that become empty under the filter.
+      document.querySelectorAll('.part-group').forEach(function (group) {
+        var visible = group.querySelectorAll(
+          '.chapter-card:not([data-hidden-by-filter="true"])',
+        );
+        if (visible.length === 0) {
+          group.setAttribute('data-hidden-by-filter', 'true');
+        } else {
+          group.removeAttribute('data-hidden-by-filter');
+        }
+      });
+
+      // Update the hint line.
+      var hint = document.getElementById('filter-hint');
+      if (hint) {
+        if (!active) {
+          hint.textContent = '';
+        } else {
+          hint.textContent =
+            'Showing ' + shownCount + ' of ' + totalCount +
+            ' chapters (filter: ' + selected.join(', ') + ').' +
+            ' Cross-tool chapters stay visible.';
+        }
+      }
+    }
+
+    // Apply saved filter on first load, before the island hydrates.
+    applyFilter(readSelected());
+
+    // React to subsequent changes from the ToolFilter island.
+    window.addEventListener(EVENT_NAME, function (e) {
+      var detail = e && e.detail ? e.detail : {};
+      applyFilter(Array.isArray(detail.selected) ? detail.selected : []);
+    });
+  })();
+</script>
 
 <style>
   .chapters-index-header {
@@ -203,9 +289,22 @@ function partLabel(part: number, appendix: boolean): string {
     gap: var(--space-2);
   }
 
-  /* Filter target: set `[data-hidden-by-filter="true"]` on a card to hide it.
-   * The attribute is added by inline script in Stage 3.2 commit 3. */
-  .chapter-card[data-hidden-by-filter='true'] {
+  /* Filter target: cards + part-groups hide when the inline script
+   * flags them based on the active ToolFilter selection. */
+  .chapter-card[data-hidden-by-filter='true'],
+  .part-group[data-hidden-by-filter='true'] {
     display: none;
+  }
+
+  .chapters-filter-hint {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin: var(--space-2) 0 var(--space-4) 0;
+    min-height: 1.4em;
+  }
+  .chapters-filter-hint:empty {
+    margin: 0;
+    min-height: 0;
   }
 </style>
