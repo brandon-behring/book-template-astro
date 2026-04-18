@@ -28,8 +28,10 @@ import '../styles/typography.css';
 import '../styles/layout.css';
 import '../styles/callouts.css';
 import '../styles/chapter.css';
+import '../styles/tool-filter.css';
 import '../styles/print.css';
 import VersionSelector from '../components/VersionSelector';
+import ToolFilter from '../components/ToolFilter';
 
 interface Props {
   title: string;
@@ -65,6 +67,7 @@ const { title, description, lang = 'en' } = Astro.props;
   </head>
   <body>
     <div class="chrome-buttons">
+      <ToolFilter client:idle />
       <VersionSelector client:idle />
       <a
         href="/search/"
