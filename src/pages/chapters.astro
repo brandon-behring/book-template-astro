@@ -1,0 +1,211 @@
+---
+/**
+ * /chapters — book index page.
+ *
+ * Groups non-draft chapters by Part in ascending part+chapter order.
+ * Each card exposes `data-tools="<slug> <slug>..."` so future tool-filter
+ * plumbing (Stage 3.2 commit 3) can hide cards via a single attribute
+ * selector without touching the card rendering.
+ */
+import Base from '../layouts/Base.astro';
+import { getAllChapters, type Chapter } from '../lib/chapters';
+import { getFreshness, freshnessLabel } from '../lib/freshness';
+
+const chapters = await getAllChapters();
+
+// Stable insertion-order grouping: iterate sorted chapters once.
+const byPart = new Map<number, Chapter[]>();
+for (const c of chapters) {
+  const list = byPart.get(c.data.part);
+  if (list) list.push(c);
+  else byPart.set(c.data.part, [c]);
+}
+
+function formatDate(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+function partLabel(part: number, appendix: boolean): string {
+  return appendix ? 'Appendices' : `Part ${part}`;
+}
+---
+<Base
+  title="Chapters — Agentic Coding"
+  description="All chapters grouped by Part, with volatility, freshness, and tools-compared metadata at a glance."
+>
+  <article class="prose chapters-index">
+    <header class="chapters-index-header">
+      <h1>Chapters</h1>
+      <p class="chapters-index-lede">
+        Every chapter, grouped by Part. Each card shows its volatility
+        class, freshness status, and the tools it compares. Use a chapter
+        card's metadata to calibrate how much trust to place in its
+        specific claims — stable principles age slowly; feature surfaces
+        age fast.
+      </p>
+    </header>
+
+    {Array.from(byPart.entries()).map(([part, list]) => {
+      const appendix = part >= 6;
+      return (
+        <section class="part-group">
+          <h2 class="part-heading">
+            <span class="part-label">{partLabel(part, appendix)}</span>
+          </h2>
+          <ol class="chapter-list">
+            {list.map((c) => {
+              const freshness = getFreshness(c.data.last_verified, c.data.volatility);
+              const freshnessText =
+                freshness.status === 'fresh'
+                  ? 'Fresh'
+                  : freshness.status === 'verify-soon'
+                    ? 'Verify soon'
+                    : 'Stale';
+              const toolsAttr = c.data.tools_compared.join(' ');
+              return (
+                <li
+                  class="chapter-card"
+                  data-tools={toolsAttr}
+                >
+                  <a href={`/${c.id}/`} class="chapter-card-link">
+                    <div class="chapter-card-meta">
+                      <span class="chapter-card-number">
+                        {appendix ? `Appendix ${String.fromCharCode(64 + c.data.chapter).toLowerCase()}` : `Chapter ${c.data.chapter}`}
+                      </span>
+                      <span
+                        class={`volatility-badge volatility-${c.data.volatility}`}
+                        title={`Volatility: ${c.data.volatility}`}
+                      >{c.data.volatility}</span>
+                      <span
+                        class="freshness-badge"
+                        data-status={freshness.status}
+                        aria-label={freshnessLabel(freshness)}
+                        title={freshnessLabel(freshness)}
+                      >{freshnessText}</span>
+                      <span class="chapter-card-verified">
+                        verified {formatDate(c.data.last_verified)}
+                      </span>
+                    </div>
+                    <h3 class="chapter-card-title">{c.data.title}</h3>
+                    {c.data.description && (
+                      <p class="chapter-card-description">{c.data.description}</p>
+                    )}
+                    <div class="chapter-card-tools">
+                      {c.data.tools_compared.map((t) => (
+                        <span class="tool-badge">{t}</span>
+                      ))}
+                    </div>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      );
+    })}
+  </article>
+</Base>
+
+<style>
+  .chapters-index-header {
+    margin-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-6);
+  }
+  .chapters-index-lede {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    max-width: 65ch;
+  }
+
+  .part-group {
+    margin: var(--space-8) 0;
+  }
+  .part-heading {
+    font-size: var(--text-sm);
+    font-family: var(--font-code);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+  .part-label {
+    font-weight: 500;
+  }
+
+  .chapter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .chapter-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+  .chapter-card:hover {
+    border-color: var(--color-link);
+    background: var(--color-bg-subtle);
+  }
+  .chapter-card-link {
+    display: block;
+    padding: var(--space-4);
+    text-decoration: none;
+    color: inherit;
+  }
+  .chapter-card-link:hover {
+    text-decoration: none;
+  }
+
+  .chapter-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+  .chapter-card-number {
+    font-family: var(--font-code);
+    font-weight: 500;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: var(--text-xs);
+  }
+  .chapter-card-verified {
+    font-family: var(--font-code);
+    font-size: var(--text-xs);
+  }
+
+  .chapter-card-title {
+    font-size: var(--text-lg);
+    font-weight: 500;
+    margin: 0 0 var(--space-2) 0;
+    color: var(--color-link);
+  }
+  .chapter-card-description {
+    color: var(--color-text);
+    margin: 0 0 var(--space-3) 0;
+    text-indent: 0;
+    line-height: 1.5;
+  }
+  .chapter-card-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* Filter target: set `[data-hidden-by-filter="true"]` on a card to hide it.
+   * The attribute is added by inline script in Stage 3.2 commit 3. */
+  .chapter-card[data-hidden-by-filter='true'] {
+    display: none;
+  }
+</style>
