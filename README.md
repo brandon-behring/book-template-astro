@@ -1,31 +1,45 @@
-# book-template-astro
+# Agentic Coding: Principles and Practices
 
-Scaffold for long-form technical books with Tufte-inspired typography, typed pedagogical callouts, mobile-first responsive design, and PDF export from the same source.
+**v1.0 — 2026-04-18**. A comparative book on agentic coding across
+Claude Code, Gemini CLI, and Codex CLI. Principles, patterns, and the
+drift-detection discipline that keeps the book current as the tools
+evolve.
 
-This is the **template repository** — future books will be bootstrapped from this scaffold and customize content. The scaffold itself is maintained here as the canonical artifact.
+Web: _pending Cloudflare Pages setup_ · PDF: `npm run pdf` or GitHub
+release artifact.
 
-## Status — Stage 0 complete
+See [`CHANGELOG.md`](CHANGELOG.md) and
+[`docs/release-notes-v1.0.md`](docs/release-notes-v1.0.md) for the
+full v1.0 summary.
 
-All 19 commits of Stage 0 have landed. Tagged as `v0.1-stage0-complete`.
+## What's inside
 
-- ✅ Astro 6 + MDX + Preact
-- ✅ Warm Tol palette as CSS custom properties (light + dark)
-- ✅ Tufte 2-column desktop layout; inline-flow asides on mobile (CSS-only)
-- ✅ 9 typed callout components (Skill / CaseStudy / Concept / KeyIdea / TryThis / Recovery / Convergence / Divergence / Citation)
-- ✅ 4 content collections with Zod schemas (chapters / sources / changelog / patterns)
-- ✅ Dynamic chapter routing + prev/next nav + collapsed TOC
-- ✅ Shiki syntax highlighting in CSS-variables mode
-- ✅ Pagefind static search
-- ✅ Preact island proof (version selector)
-- ✅ Paged.js PDF pipeline
-- ✅ Cloudflare Pages deploy workflow (pending account setup)
+- 23 chapters (16 body + preface + 6 appendices), 28 indexed pages
+  via Pagefind.
+- 4 interactive infrastructure features: freshness badges (volatility-
+  aware), tool filter (`/chapters`), source archive (Appendix D),
+  convergence dashboard (`/convergence`).
+- PDF edition via Paged.js, full-text search via Pagefind, dark mode,
+  Warm Tol 5-hue palette (colorblind-safe).
 
-Next: Stage 1 ports Ch 5 "Context as Currency" from the LaTeX book to
-validate the pedagogy on real content. See
-`~/.claude/plans/i-believe-this-project-generic-sphinx.md` for the full
-roadmap.
+## Scaffold + pedagogy
 
-## Architecture (planned)
+This book is built on the [`book-scaffold-astro`](https://github.com/brandon-behring/book-scaffold-astro)
+template. Three opinionated decisions encoded in the scaffold:
+
+1. **Koller-Friedman chapter shape** (Representation / Operation /
+   Evolution) — read `/00-design/` as the reader's guide.
+2. **Volatility classes** drive freshness badges. Every chapter
+   declares one of three classes; the badge reflects how stale the
+   chapter's claims have become against the class's threshold.
+3. **Source tiers** (T1-official / T2-release-notes / T3-practitioner
+   / T4-conjecture) calibrate trust at the point of citation.
+
+Pedagogy references live in the
+[`book-scaffold-astro/pedagogy/`](https://github.com/brandon-behring/book-scaffold-astro/tree/main/pedagogy)
+directory and at `~/.claude/skills/book-scaffold-astro/pedagogy/`.
+
+## Architecture
 
 - **Astro** + **MDX** — content as structured components
 - **Content Collections** with Zod schemas — frontmatter validation
@@ -63,6 +77,29 @@ One-time setup:
    uploads to Cloudflare Pages. Subsequent pushes to `v*` branches
    deploy as versioned preview URLs.
 
-## First book built on this scaffold
+## Contributing
 
-`agentic-coding-best-practices` — at `~/Claude/agentic-coding-best-practices/` (to be bootstrapped from this template in Stage 3).
+Reader feedback lives in GitHub Issues. Use labels:
+
+- `content-error` — factual mistake in the prose.
+- `drift-detected` — a claim has gone stale since its `last_verified`
+  date.
+- `new-pattern` — a convergence/divergence pattern worth tracking on
+  the dashboard.
+- `clarification` — ambiguous wording or missing worked example.
+
+Pull requests welcome for typos, small corrections, and content-
+error fixes. Larger additions (new chapters, dashboard patterns)
+should open an Issue first so scope can be aligned.
+
+## Provenance
+
+Methodology migrated from the LaTeX predecessor
+[`claude-best-practices`](https://github.com/brandon-behring/claude-best-practices)
+(sunset at v2.9, 2026-04-17). The scaffold itself evolved through
+Stage 0 → Stage 3 between 2026-04-17 and 2026-04-18 before this v1.0
+tag.
+
+## License
+
+Pending — will be added in a follow-up commit.
