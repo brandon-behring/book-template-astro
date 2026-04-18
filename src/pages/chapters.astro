@@ -233,7 +233,13 @@ function partLabel(part: number, appendix: boolean): string {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     background: var(--color-bg);
-    transition: border-color 120ms ease, background 120ms ease;
+    transition:
+      border-color 120ms ease,
+      background 120ms ease,
+      opacity 180ms ease,
+      max-height 220ms ease;
+    max-height: 40rem; /* ceiling for the transition; actual height is auto */
+    overflow: hidden;
   }
   .chapter-card:hover {
     border-color: var(--color-link);
@@ -289,9 +295,22 @@ function partLabel(part: number, appendix: boolean): string {
     gap: var(--space-2);
   }
 
-  /* Filter target: cards + part-groups hide when the inline script
-   * flags them based on the active ToolFilter selection. */
-  .chapter-card[data-hidden-by-filter='true'],
+  /* Filter target: cards fade + collapse smoothly; full display:none
+   * kicks in after the transition so we don't keep a focusable node
+   * in the list. Part-groups collapse immediately because they're
+   * structural, not reader-facing. */
+  .chapter-card[data-hidden-by-filter='true'] {
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .chapter-card[data-hidden-by-filter='true'] .chapter-card-link {
+    visibility: hidden;
+  }
   .part-group[data-hidden-by-filter='true'] {
     display: none;
   }

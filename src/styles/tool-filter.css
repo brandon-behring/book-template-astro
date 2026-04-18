@@ -63,8 +63,11 @@
 }
 
 .tool-filter-chip {
-  display: inline-block;
-  padding: 0.15em 0.6em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.2em 0.7em;
+  min-height: 1.8em; /* mobile tap target */
   border-radius: 999px;
   background: transparent;
   color: var(--color-text);
@@ -73,16 +76,31 @@
   font-family: var(--font-code);
   font-size: var(--text-sm);
   line-height: 1.4;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 80ms ease;
 }
 .tool-filter-chip:hover {
   border-color: var(--color-link);
+}
+.tool-filter-chip:active {
+  transform: scale(0.96);
+}
+.tool-filter-chip:focus-visible {
+  outline: 2px solid var(--color-link);
+  outline-offset: 2px;
 }
 .tool-filter-chip-on {
   background: var(--warm-blue-tint);
   color: var(--warm-blue);
   border-color: var(--warm-blue);
   font-weight: 500;
+}
+.tool-filter-chip-on::before {
+  content: '✓';
+  font-size: 0.8em;
 }
 
 .tool-filter-footer {
