@@ -13,6 +13,7 @@ draft: false
 import SkillBox from '../../components/callouts/SkillBox.astro';
 import ConceptBox from '../../components/callouts/ConceptBox.astro';
 import Citation from '../../components/Citation.astro';
+import SourceArchive from '../../components/SourceArchive.astro';
 
 *Every claim in this book that rests on an external source is tagged with a `<Citation>` that resolves to an entry in this archive. The archive itself lives in version-controlled YAML; this page is the human-readable view. Ch 15's source-tiering methodology is implemented concretely here — every source carries a tier from T1-official to T4-conjecture, and the audit cadence for each chapter is shaped by the tier mix of its cited sources.*
 
@@ -37,23 +38,17 @@ The full captured HTML + PDF + screenshot of each source is held in the repo's g
 
 ## The archive
 
-This is a snapshot of the manifest at the chapter's last-verified date. Stage 3 of the book's roadmap replaces this static listing with an auto-rendered page that reads from the manifest directly; until then, this page is maintained in parallel with the YAML and is subject to lag during the gap.
+The listing below is rendered live from `sources/manifest.yaml` at build time by the `<SourceArchive />` component. Entries are grouped by tier in descending authority (T1 → T4); within a tier, newest publish dates come first. Empty tiers render an honest placeholder — the archive is intentionally sparse in the early book, and visible gaps are part of the pedagogy.
 
-### T3-practitioner
+<SourceArchive />
 
-**Sidenotes In Web Design** — Gwern Branwen, 2020. [gwern.net/sidenote](https://gwern.net/sidenote)
-Captured 2026-04-17. Load-bearing for this book's sidenote design: Gwern's "no effort" principle (sidenotes should require no tap or click to reveal) shapes the mobile inline-flow pattern used throughout.
-
-**Tufte CSS** — Dave Liepmann, 2014. [edwardtufte.github.io/tufte-css](https://edwardtufte.github.io/tufte-css/)
-Captured 2026-04-17. Foundation for the two-column desktop layout with right-margin sidenotes, adapted with CSS custom properties for the book's warm Tol palette.
-
-## What's coming in Stage 3
+## What's coming
 
 The archive is intentionally sparse at this point in the book's development. Stage 3 of the roadmap expands it substantially:
 
 - **Tool-specific citations.** Claude Code's documentation, Gemini CLI's release notes, Codex CLI's reference pages — currently referenced only implicitly in the companion appendices, with explicit citations to land as Stage 3 chapters complete their research phase.
 - **Academic and practitioner sources.** Koller-Friedman's *Probabilistic Graphical Models* (the pedagogical framework), Tufte's design books (the layout inheritance), practitioner long-form on AI-assisted development — landing as chapters citing them move out of draft.
-- **Auto-rendered archive page.** A dynamic Astro page reads the manifest at build time and replaces this static listing — including faceted filtering by tier, tool, and publish date.
+- **Faceted filtering** (post-v1.0). Client-side filters by tier, tool, and publish-date band over the auto-rendered listing above. Live already at the chapter-level tool filter; the faceted source view reuses the same plumbing.
 - **Drift-detection workflow.** A scheduled job (quarterly) re-fetches every T1 source and flags significant hash changes for human review. The manifest grows a `last_verified_at` field tracking when each source was last re-checked against its live URL.
 
 ## Audit expectations
