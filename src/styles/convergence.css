@@ -299,6 +299,24 @@
   }
 }
 
+/* Narrow phones (iPhone 5 / small folds): stack tool label above rail
+ * entirely. 8rem sidebar was still sharing ~200px with the rail on
+ * a 320px viewport, causing dots to crowd when multiple events
+ * fell within a tight date range. */
+@media (max-width: 26rem) {
+  .pattern-timeline-track {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .pattern-timeline-tool-label {
+    font-size: var(--text-xs);
+    padding-top: var(--space-1);
+  }
+  .pattern-timeline-rail {
+    min-height: 2.6rem; /* a bit more vertical room so labels don't collide */
+  }
+}
+
 /* ===== Print ===== */
 @media print {
   .pattern-card {
