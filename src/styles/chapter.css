@@ -72,7 +72,6 @@
  */
 .freshness-badge {
   display: inline-block;
-  margin-left: 0.35em;
   padding: 0.02em 0.45em;
   border-radius: var(--radius-sm);
   font-size: 0.85em;
@@ -81,6 +80,9 @@
   line-height: 1.4;
   vertical-align: baseline;
   cursor: help;
+  /* Prevent the "2026-04-17 · Fresh" pair from breaking across lines when
+   * chapter-meta wraps on narrow viewports. */
+  white-space: nowrap;
 }
 .freshness-badge[data-status='fresh'] {
   background: var(--warm-green-tint);
