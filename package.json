@@ -1,31 +1,27 @@
 {
-  "name": "book-template-astro",
+  "name": "agentic-coding-book",
+  "description": "Agentic Coding — a tools-profile cross-comparison of Claude Code, Gemini CLI, and Codex CLI. Built on @brandon_m_behring/book-scaffold-astro v3.",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
+    "predev": "npm run build:labels --if-present",
+    "prebuild": "npm run build:labels --if-present && npm run validate --if-present",
+    "build:labels": "book-scaffold build-labels",
+    "build:figures": "book-scaffold build-figures",
+    "build:notebooks": "book-scaffold render-notebooks",
+    "validate": "book-scaffold validate",
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
-    "build:astro": "astro build",
-    "index": "pagefind --site dist",
-    "preview": "astro preview",
-    "astro": "astro",
-    "pdf:render": "mkdir -p dist-pdf && pagedjs-cli http://localhost:4321/print/ -o dist-pdf/book.pdf",
-    "pdf": "start-server-and-test preview http://localhost:4321/ pdf:render"
+    "preview": "astro preview"
   },
   "dependencies": {
+    "@brandon_m_behring/book-scaffold-astro": "^3.0.0-alpha.12",
     "@astrojs/mdx": "^5.0.3",
     "@astrojs/preact": "^5.1.1",
-    "@fontsource-variable/roboto": "^5.2.10",
-    "@fontsource-variable/source-code-pro": "^5.2.7",
     "astro": "^6.1.7",
-    "pagefind": "^1.5.2",
     "preact": "^10.29.1"
-  },
-  "devDependencies": {
-    "pagedjs-cli": "^0.4.3",
-    "start-server-and-test": "^3.0.2"
   }
 }
