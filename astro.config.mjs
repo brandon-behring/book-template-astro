@@ -1,21 +1,18 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+/**
+ * astro.config.mjs — Agentic Coding (tools-profile book), v3 consumer of
+ * @brandon_m_behring/book-scaffold-astro.
+ *
+ * defineBookConfig threads BOOK_PROFILE=tools (set in .env), wires
+ * MDX + Preact + bookScaffoldIntegration, and auto-injects /chapters,
+ * /convergence, /print, /references, /search.
+ */
+import { defineBookConfig } from '@brandon_m_behring/book-scaffold-astro';
 
-import mdx from '@astrojs/mdx';
-
-import preact from '@astrojs/preact';
-
-// https://astro.build/config
-export default defineConfig({
-  integrations: [mdx(), preact()],
-  markdown: {
-    shikiConfig: {
-      // css-variables mode: Shiki emits CSS custom properties
-      // (--astro-code-*) which are mapped to the Warm Tol palette in
-      // src/styles/tokens.css. Lets the same code block use different
-      // colors in light vs dark mode without rebuilding the site.
-      theme: 'css-variables',
-      wrap: false,
-    },
-  },
+export default await defineBookConfig({
+  site: 'https://agentic-coding.example.invalid',
+  // Explicit profile — .env is gitignored by default, so the env-driven
+  // fallback inside resolveProfile picks 'minimal' in build containers
+  // that don't ship .env. Hardcoding makes builds deterministic.
+  profile: 'tools',
 });
