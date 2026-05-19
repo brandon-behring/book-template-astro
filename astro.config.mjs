@@ -11,4 +11,8 @@ import { defineBookConfig } from '@brandon_m_behring/book-scaffold-astro';
 
 export default await defineBookConfig({
   site: 'https://agentic-coding.example.invalid',
+  // Explicit profile — .env is gitignored by default, so the env-driven
+  // fallback inside resolveProfile picks 'minimal' in build containers
+  // that don't ship .env. Hardcoding makes builds deterministic.
+  profile: 'tools',
 });

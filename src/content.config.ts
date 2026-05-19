@@ -7,4 +7,5 @@
  */
 import { defineBookSchemas } from '@brandon_m_behring/book-scaffold-astro/schemas';
 
-export const { collections } = defineBookSchemas();
+// Explicit profile — same reasoning as astro.config.mjs.
+export const { collections } = defineBookSchemas({ profile: 'tools' });
