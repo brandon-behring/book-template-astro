@@ -77,6 +77,8 @@ One-time setup:
    uploads to Cloudflare Pages. Subsequent pushes to `v*` branches
    deploy as versioned preview URLs.
 
+For Brandon's deploys, the public URL follows the per-project-subdomain convention `<repo-slug>.brandon-behring.dev` — see [the Subdomain convention in brandon-behring.dev/README.md](https://github.com/brandon-behring/brandon-behring.dev#subdomain-convention) for the slug rule and dashboard click-path.
+
 ## Contributing
 
 Reader feedback lives in GitHub Issues. Use labels:
